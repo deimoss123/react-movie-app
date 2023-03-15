@@ -13,12 +13,22 @@ export default function HomePage() {
   );
 
   const onRentClick = (movieName: string) => {
+    // set available movies
     const newMovies = [...availableMovies];
     const movie = newMovies.find(m => m.name === movieName);
     if (!movie || movie.stock <= 0) return;
     movie.stock--;
     setAvailableMovies(newMovies);
     localStorage.setItem('availableMovies', JSON.stringify(newMovies));
+
+    // set your movies
+    const yourMovies = localStorage.getItem('yourMovies')
+      ? JSON.parse(localStorage.getItem('yourMovies')!)
+      : [];
+    localStorage.setItem(
+      'yourMovies',
+      JSON.stringify([...yourMovies, { name: movieName, hoursRented: 12 }])
+    );
   };
 
   return (
