@@ -4,7 +4,7 @@ import Footer from '../components/Footer';
 export default function Root() {
   return (
     <>
-      root element
+      <h1 className="pageTitle">Movie Rental</h1>
       <Outlet />
       <Footer />
     </>
