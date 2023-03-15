@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import Header from '../components/Header';
-import defaultMovieList, { YourMovie } from '../movieList';
+import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
 
 export default function HomePage() {
   const [availableMovies, setAvailableMovies] = useState(
     localStorage.getItem('availableMovies')
-      ? (JSON.parse(localStorage.getItem('availableMovies')!) as YourMovie[])
+      ? (JSON.parse(
+          localStorage.getItem('availableMovies')!
+        ) as AvailableMovie[])
       : defaultMovieList
   );
 

@@ -1,11 +1,11 @@
-export interface YourMovie {
+export interface AvailableMovie {
   name: string;
   genre: string;
   rentalPrice: number;
   stock: number;
 }
 
-const defaultMovieList: YourMovie[] = [
+const defaultMovieList: AvailableMovie[] = [
   {
     name: 'Shrek',
     genre: 'Comedy',
