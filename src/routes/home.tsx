@@ -1,7 +1,19 @@
+import { useState } from 'react';
 import Header from '../components/Header';
+import movieList, { Movie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
 
 export default function HomePage() {
+  const [availableMovies, setAvailableMovies] = useState<Movie[]>(movieList);
+
+  const onRentClick = (name: string) => {
+    const newMovies = [...availableMovies];
+    const movie = newMovies.find(m => m.name === name);
+    if (!movie || movie.stock <= 0) return;
+    movie.stock--;
+    setAvailableMovies(newMovies);
+  };
+
   return (
     <>
       <Header />
@@ -18,15 +30,19 @@ export default function HomePage() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>Batman</td>
-                <td>Action</td>
-                <td>4.55$</td>
-                <td>yes</td>
-                <td>
-                  <button>Rent</button>
-                </td>
-              </tr>
+              {availableMovies.map(movie => (
+                <tr key={movie.name}>
+                  <td>{movie.name}</td>
+                  <td>{movie.genre}</td>
+                  <td>${movie.rentalPrice}</td>
+                  <td>{movie.stock > 0 ? 'yes' : 'no'}</td>
+                  <td>
+                    <button onClick={() => onRentClick(movie.name)}>
+                      Rent ({movie.stock})
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
