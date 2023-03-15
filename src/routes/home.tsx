@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Header from '../components/Header';
-import movieList, { Movie } from '../movieList';
+import defaultMovieList, { YourMovie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
 
 export default function HomePage() {
   const [availableMovies, setAvailableMovies] = useState(
     localStorage.getItem('availableMovies')
-      ? (JSON.parse(localStorage.getItem('availableMovies')!) as Movie[])
-      : movieList
+      ? (JSON.parse(localStorage.getItem('availableMovies')!) as YourMovie[])
+      : defaultMovieList
   );
 
   const onRentClick = (movieName: string) => {

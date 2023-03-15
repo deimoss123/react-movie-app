@@ -1,11 +1,11 @@
-export interface Movie {
+export interface YourMovie {
   name: string;
   genre: string;
   rentalPrice: number;
   stock: number;
 }
 
-const movieList: Movie[] = [
+const defaultMovieList: YourMovie[] = [
   {
     name: 'Shrek',
     genre: 'Comedy',
@@ -32,4 +32,4 @@ const movieList: Movie[] = [
   },
 ];
 
-export default movieList;
+export default defaultMovieList;
