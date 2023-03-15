@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from '../syles/errorPage.module.scss';
+import styles from '../styles/errorPage.module.scss';
 
 export default function ErrorPage() {
   return (

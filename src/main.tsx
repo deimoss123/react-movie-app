@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
-import './syles/index.scss';
+import './styles/index.scss';
 import Root from './routes/root';
 import LoginPage from './routes/login';
 import YourMoviesPage from './routes/your-movies';
