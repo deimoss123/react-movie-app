@@ -7,6 +7,7 @@ import LoginPage from './routes/login';
 import YourMoviesPage from './routes/your-movies';
 import ProfilePage from './routes/profile';
 import ErrorPage from './routes/error';
+import HomePage from './routes/home';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
     element: <Root />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: '/home',
+        element: <HomePage />,
+      },
       {
         path: '/login',
         element: <LoginPage />,
