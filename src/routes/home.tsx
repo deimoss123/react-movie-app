@@ -4,14 +4,19 @@ import movieList, { Movie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
 
 export default function HomePage() {
-  const [availableMovies, setAvailableMovies] = useState<Movie[]>(movieList);
+  const [availableMovies, setAvailableMovies] = useState(
+    localStorage.getItem('availableMovies')
+      ? (JSON.parse(localStorage.getItem('availableMovies')!) as Movie[])
+      : movieList
+  );
 
-  const onRentClick = (name: string) => {
+  const onRentClick = (movieName: string) => {
     const newMovies = [...availableMovies];
-    const movie = newMovies.find(m => m.name === name);
+    const movie = newMovies.find(m => m.name === movieName);
     if (!movie || movie.stock <= 0) return;
     movie.stock--;
     setAvailableMovies(newMovies);
+    localStorage.setItem('availableMovies', JSON.stringify(newMovies));
   };
 
   return (
