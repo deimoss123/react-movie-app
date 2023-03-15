@@ -1,54 +1,154 @@
 import styles from '../styles/loginPage.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { YourMovie } from './your-movies';
 
-function TextInput({
+const TextInput = ({
   name,
   label,
   placeholder,
+  onChange,
+  formData,
 }: {
   name: string;
   label: string;
   placeholder: string;
-}) {
-  return (
-    <>
-      <label htmlFor={name}>{label}</label>
-      <input type="text" name={name} placeholder={placeholder} />
-    </>
-  );
+  formData: Record<string, string>;
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+}) => (
+  <>
+    <label htmlFor={name}>{label}</label>
+    <input
+      type="text"
+      name={name}
+      placeholder={placeholder}
+      onChange={onChange}
+      value={formData ? formData[name] : ''}
+    />
+  </>
+);
+
+interface User {
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+  rentedMovies: YourMovie[];
 }
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    loginName: '',
+    loginPassword: '',
 
-  const onSubmit = (e: React.FormEvent) => {
+    name: '',
+    surname: '',
+    email: '',
+    emailAgain: '',
+    password: '',
+    passwordAgain: '',
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    console.log(e.target.name);
+
+    const { name, value } = e.target;
+
+    setFormData(data => ({ ...data, [name]: value }));
+  };
+
+  const onSubmitLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('test');
+
+    // TODO: form validation
+    console.log('Login');
+    // navigate('/home');
+  };
+
+  const onSubmitRegister = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // TODO: form validation
+    const newUser: User = {
+      name: formData.name,
+      surname: formData.surname,
+      email: formData.email,
+      password: formData.password,
+      rentedMovies: [],
+    };
+
+    const local = localStorage.getItem('registeredUsers');
+    const registeredUsers = local ? (JSON.parse(local) as User[]) : [];
+    registeredUsers.push(newUser);
+    localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+
     navigate('/home');
   };
 
   return (
     <div className={styles.loginPage}>
-      <form onSubmit={onSubmit}>
-        <TextInput name="email" label="Email" placeholder="email" />
-        <TextInput name="password" label="Password" placeholder="password" />
+      <form onSubmit={onSubmitLogin}>
+        <TextInput
+          name="loginEmail"
+          label="Email"
+          placeholder="email"
+          onChange={handleInputChange}
+          formData={formData}
+        />
+        <TextInput
+          name="loginPassword"
+          label="Password"
+          placeholder="password"
+          onChange={handleInputChange}
+          formData={formData}
+        />
 
         <button type="submit">Log in</button>
       </form>
-      <form onSubmit={onSubmit}>
-        <TextInput name="name" label="Name" placeholder="name" />
-        <TextInput name="surname" label="Surname" placeholder="surname" />
-        <TextInput name="email" label="Email" placeholder="email" />
-        <TextInput name="email-again" label="Email again" placeholder="email" />
+      <form onSubmit={onSubmitRegister}>
+        <TextInput
+          name="name"
+          label="Name"
+          placeholder="name"
+          onChange={handleInputChange}
+          formData={formData}
+        />
+        <TextInput
+          name="surname"
+          label="Surname"
+          placeholder="surname"
+          onChange={handleInputChange}
+          formData={formData}
+        />
+        <TextInput
+          name="email"
+          label="Email"
+          placeholder="email"
+          onChange={handleInputChange}
+          formData={formData}
+        />
+        <TextInput
+          name="emailAgain"
+          label="Email again"
+          placeholder="email"
+          onChange={handleInputChange}
+          formData={formData}
+        />
         <TextInput
           name="password"
           label="Password again"
           placeholder="password"
+          onChange={handleInputChange}
+          formData={formData}
         />
         <TextInput
-          name="password-again"
+          name="passwordAgain"
           label="Password"
           placeholder="password"
+          onChange={handleInputChange}
+          formData={formData}
         />
         <button type="submit">Register</button>
       </form>

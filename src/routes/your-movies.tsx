@@ -3,7 +3,7 @@ import Header from '../components/Header';
 import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/yourMoviesPage.module.scss';
 
-interface YourMovie {
+export interface YourMovie {
   name: string;
   hoursRented: number;
 }
