@@ -1,7 +1,12 @@
+import { Outlet } from 'react-router-dom';
+import Footer from '../components/Footer';
+
 export default function Root() {
   return (
     <>
-      <div>root element</div>
+      root element
+      <Outlet />
+      <Footer />
     </>
   );
 }
