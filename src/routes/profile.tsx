@@ -1,12 +1,8 @@
 import { useState } from 'react';
 import Header from '../components/Header';
 import styles from '../styles/profilePage.module.scss';
+import getCurrentUser from '../util/getCurrentUser';
 import updateUser from '../util/updateUser';
-import { User } from './login';
-
-function getCurrentUser(): User {
-  return JSON.parse(localStorage.getItem('currentUser')!) as User;
-}
 
 export default function ProfilePage() {
   const user = getCurrentUser();
