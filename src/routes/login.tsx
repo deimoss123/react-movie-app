@@ -1,6 +1,6 @@
 import styles from '../styles/loginPage.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { YourMovie } from './your-movies';
 import useAuth from '../auth';
 
@@ -50,7 +50,11 @@ export default function LoginPage() {
     password: '',
     passwordAgain: '',
   });
-  const { login } = useAuth();
+  const { login, authed } = useAuth();
+
+  useEffect(() => {
+    if (authed) navigate('/home', { replace: true });
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -86,7 +90,7 @@ export default function LoginPage() {
     localStorage.setItem('currentUser', JSON.stringify(newUser));
 
     login().then(() => {
-      navigate('/home');
+      navigate('/home', { replace: true });
     });
   };
 
