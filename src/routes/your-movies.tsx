@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Header from '../components/Header';
 import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/yourMoviesPage.module.scss';
+import getCurrentUser from '../util/getCurrentUser';
+import updateUser from '../util/updateUser';
 
 export interface YourMovie {
   name: string;
@@ -9,16 +11,14 @@ export interface YourMovie {
 }
 
 export default function YourMoviesPage() {
-  const local = localStorage.getItem('yourMovies');
-  const [yourMovies, setYourMovies] = useState<YourMovie[]>(
-    local ? (JSON.parse(local) as YourMovie[]) : []
-  );
+  const user = getCurrentUser();
+  const [yourMovies, setYourMovies] = useState<YourMovie[]>(user.rentedMovies);
 
   const onRemoveClick = (movieName: string, index: number) => {
     // set your movies
     const newMovies = yourMovies.filter((_, i) => i !== index);
     setYourMovies(newMovies);
-    localStorage.setItem('yourMovies', JSON.stringify(newMovies));
+    updateUser({ rentedMovies: newMovies });
 
     // set available movies
     const local = localStorage.getItem('availableMovies');
@@ -29,6 +29,14 @@ export default function YourMoviesPage() {
     if (!movie) return;
     movie.stock++;
     localStorage.setItem('availableMovies', JSON.stringify(availableMovies));
+  };
+
+  const changeRentTime = (index: number, hours: number) => {
+    if (hours < 0 && yourMovies[index].hoursRented <= 12) return;
+    const newMovies = [...yourMovies];
+    newMovies[index].hoursRented += hours;
+    setYourMovies(newMovies);
+    updateUser({ rentedMovies: newMovies });
   };
 
   return (
@@ -54,10 +62,21 @@ export default function YourMoviesPage() {
                 <tr key={index}>
                   <td>{movie.name}</td>
                   <td>{data?.genre}</td>
-                  <td>{movie.hoursRented}h</td>
-                  <td>${price}</td>
+                  <td className={styles.timeCol}>
+                    <button onClick={() => changeRentTime(index, -12)}>
+                      {'<'}
+                    </button>
+                    {movie.hoursRented}h
+                    <button onClick={() => changeRentTime(index, 12)}>
+                      {'>'}
+                    </button>
+                  </td>
+                  <td>${price.toFixed(2)}</td>
                   <td>
-                    <button onClick={() => onRemoveClick(movie.name, index)}>
+                    <button
+                      className={styles.removeBtn}
+                      onClick={() => onRemoveClick(movie.name, index)}
+                    >
                       Remove
                     </button>
                   </td>

@@ -23,7 +23,14 @@
     tbody tr {
       background-color: #ddd;
     }
-    button {
+
+    .timeCol {
+      background-color: aqua;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .removeBtn {
       width: 100%;
       height: 100%;
     }
