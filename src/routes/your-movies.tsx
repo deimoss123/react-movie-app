@@ -14,7 +14,7 @@ export default function YourMoviesPage() {
   const user = getCurrentUser();
   const [yourMovies, setYourMovies] = useState<YourMovie[]>(user.rentedMovies);
 
-  const onRemoveClick = (movieName: string, index: number) => {
+  const onRemoveClick = (index: number, movieName: string) => {
     // set your movies
     const newMovies = yourMovies.filter((_, i) => i !== index);
     setYourMovies(newMovies);
@@ -75,7 +75,7 @@ export default function YourMoviesPage() {
                   <td>
                     <button
                       className={styles.removeBtn}
-                      onClick={() => onRemoveClick(movie.name, index)}
+                      onClick={() => onRemoveClick(index, movie.name)}
                     >
                       Remove
                     </button>
