@@ -2,6 +2,8 @@ import { useState } from 'react';
 import Header from '../components/Header';
 import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
+import getCurrentUser from '../util/getCurrentUser';
+import updateUser from '../util/updateUser';
 
 export default function HomePage() {
   const [availableMovies, setAvailableMovies] = useState(
@@ -22,13 +24,13 @@ export default function HomePage() {
     localStorage.setItem('availableMovies', JSON.stringify(newMovies));
 
     // set your movies
-    const yourMovies = localStorage.getItem('yourMovies')
-      ? JSON.parse(localStorage.getItem('yourMovies')!)
-      : [];
-    localStorage.setItem(
-      'yourMovies',
-      JSON.stringify([...yourMovies, { name: movieName, hoursRented: 12 }])
-    );
+    const user = getCurrentUser();
+    updateUser({
+      rentedMovies: [
+        ...user.rentedMovies,
+        { name: movieName, hoursRented: 12 },
+      ],
+    });
   };
 
   return (
