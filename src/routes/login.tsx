@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { YourMovie } from './your-movies';
 import useAuth from '../auth';
+import getRegisteredUsers from '../util/getRegisteredUsers';
 
 const TextInput = ({
   name,
@@ -10,17 +11,19 @@ const TextInput = ({
   placeholder,
   onChange,
   formData,
+  type,
 }: {
   name: string;
   label: string;
   placeholder: string;
   formData: Record<string, string>;
   onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
 }) => (
   <>
     <label htmlFor={name}>{label}</label>
     <input
-      type="text"
+      type={type || 'text'}
       name={name}
       placeholder={placeholder}
       onChange={onChange}
@@ -40,7 +43,7 @@ export interface User {
 export default function LoginPage() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    loginName: '',
+    loginEmail: '',
     loginPassword: '',
 
     name: '',
@@ -65,9 +68,26 @@ export default function LoginPage() {
     e.preventDefault();
 
     // TODO: form validation
-    console.log('Login');
+    const registeredUsers = getRegisteredUsers();
+    const foundUser = registeredUsers.find(
+      user => user.email === formData.loginEmail
+    );
+    if (!foundUser) {
+      // TODO: show that user is not registered
+      alert('user not registered');
+      return;
+    }
+
+    if (foundUser.password !== formData.loginPassword) {
+      // TODO: incorrect password
+      alert('incorrect password');
+      return;
+    }
+
+    localStorage.setItem('currentUser', JSON.stringify(foundUser));
+
     login().then(() => {
-      navigate('/home');
+      navigate('/home', { replace: true });
     });
   };
 
@@ -83,8 +103,7 @@ export default function LoginPage() {
       rentedMovies: [],
     };
 
-    const local = localStorage.getItem('registeredUsers');
-    const registeredUsers = local ? (JSON.parse(local) as User[]) : [];
+    const registeredUsers = getRegisteredUsers();
     registeredUsers.push(newUser);
     localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
     localStorage.setItem('currentUser', JSON.stringify(newUser));
@@ -110,6 +129,7 @@ export default function LoginPage() {
           placeholder="password"
           onChange={handleInputChange}
           formData={formData}
+          type="password"
         />
 
         <button type="submit">Log in</button>
@@ -145,17 +165,19 @@ export default function LoginPage() {
         />
         <TextInput
           name="password"
-          label="Password again"
-          placeholder="password"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="passwordAgain"
           label="Password"
           placeholder="password"
           onChange={handleInputChange}
           formData={formData}
+          type="password"
+        />
+        <TextInput
+          name="passwordAgain"
+          label="Password again"
+          placeholder="password"
+          onChange={handleInputChange}
+          formData={formData}
+          type="password"
         />
         <button type="submit">Register</button>
       </form>
