@@ -5,32 +5,145 @@ import { YourMovie } from './your-movies';
 import useAuth from '../auth';
 import getRegisteredUsers from '../util/getRegisteredUsers';
 
-const TextInput = ({
+function TextInput({
   name,
   label,
   placeholder,
-  onChange,
-  formData,
   type,
+  formData,
+  onChange,
+  className,
 }: {
   name: string;
   label: string;
   placeholder: string;
-  formData: Record<string, string>;
-  onChange?: React.ChangeEventHandler<HTMLInputElement>;
   type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
-}) => (
-  <>
-    <label htmlFor={name}>{label}</label>
-    <input
-      type={type || 'text'}
-      name={name}
-      placeholder={placeholder}
-      onChange={onChange}
-      value={formData ? formData[name] : ''}
-    />
-  </>
-);
+  formData: Record<string, string>;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
+  className?: string;
+}) {
+  return (
+    <>
+      <label htmlFor={name}>{label}</label>
+      <input
+        type={type || 'text'}
+        name={name}
+        placeholder={placeholder}
+        onChange={onChange}
+        value={formData ? formData[name] : ''}
+        className={className}
+      />
+    </>
+  );
+}
+
+// some random email regex i found on google, probably not safe
+const emailRegex = new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/);
+
+export interface InputFieldOptions {
+  name: string;
+  label: string;
+  placeholder: string;
+  type?: React.InputHTMLAttributes<HTMLInputElement>['type'];
+  validateFunc: (
+    inputValue: string,
+    formData: Record<string, string>
+  ) => { valid: true } | { valid: false; msg: string };
+}
+
+const inputFields: InputFieldOptions[] = [
+  // {
+  //   name: 'loginEmail',
+  //   label: 'Email',
+  //   placeholder: 'email',
+  //   validateFunc: inputValue => {
+  //     if (!emailRegex.test(inputValue)) {
+  //       return { valid: false, msg: 'Invalid email' };
+  //     }
+  //     return { valid: true };
+  //   },
+  // },
+  // {
+  //   name: 'loginPassword',
+  //   label: 'Password',
+  //   placeholder: 'password',
+  //   type: 'password',
+  //   validateFunc: inputValue => {
+  //     if (inputValue.length < 2) {
+  //       return { valid: false, msg: 'Must be 8 or more symbols long' };
+  //     }
+  //     return { valid: true };
+  //   },
+  // },
+  {
+    name: 'name',
+    label: 'Name',
+    placeholder: 'name',
+    validateFunc: inputValue => {
+      if (inputValue.length < 2) {
+        return { valid: false, msg: 'Must contain at least 2 letters' };
+      }
+      return { valid: true };
+    },
+  },
+  {
+    name: 'surname',
+    label: 'Surname',
+    placeholder: 'surname',
+    validateFunc: inputValue => {
+      if (inputValue.length < 2) {
+        return { valid: false, msg: 'Must contain at least 2 letters' };
+      }
+      return { valid: true };
+    },
+  },
+  {
+    name: 'email',
+    label: 'Email',
+    placeholder: 'email',
+    validateFunc: inputValue => {
+      if (!emailRegex.test(inputValue)) {
+        return { valid: false, msg: 'Invalid email' };
+      }
+      return { valid: true };
+    },
+  },
+  {
+    name: 'emailAgain',
+    label: 'Email again',
+    placeholder: 'email',
+    validateFunc: (inputValue, formData) => {
+      if (inputValue !== formData.email) {
+        return { valid: false, msg: 'Emails must match' };
+      }
+      return { valid: true };
+    },
+  },
+  {
+    name: 'password',
+    label: 'Password',
+    placeholder: 'password',
+    type: 'password',
+    validateFunc: inputValue => {
+      if (inputValue.length < 8) {
+        return { valid: false, msg: 'Must be 8 or more symbols long' };
+      }
+      return { valid: true };
+    },
+  },
+  {
+    name: 'passwordAgain',
+    label: 'Password again',
+    placeholder: 'password',
+    type: 'password',
+    validateFunc: (inputValue, formData) => {
+      if (inputValue !== formData.password) {
+        return { valid: false, msg: 'Passwords must match' };
+      }
+      return { valid: true };
+    },
+  },
+];
 
 export interface User {
   name: string;
@@ -42,7 +155,7 @@ export interface User {
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<Record<string, string>>({
     loginEmail: '',
     loginPassword: '',
 
@@ -135,50 +248,33 @@ export default function LoginPage() {
         <button type="submit">Log in</button>
       </form>
       <form onSubmit={onSubmitRegister}>
-        <TextInput
-          name="name"
-          label="Name"
-          placeholder="name"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="surname"
-          label="Surname"
-          placeholder="surname"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="email"
-          label="Email"
-          placeholder="email"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="emailAgain"
-          label="Email again"
-          placeholder="email"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="password"
-          label="Password"
-          placeholder="password"
-          onChange={handleInputChange}
-          formData={formData}
-          type="password"
-        />
-        <TextInput
-          name="passwordAgain"
-          label="Password again"
-          placeholder="password"
-          onChange={handleInputChange}
-          formData={formData}
-          type="password"
-        />
+        {inputFields.map(field => {
+          const validation = field.validateFunc(formData[field.name], formData);
+          const isInvalid = !!formData[field.name].length && !validation.valid;
+
+          return (
+            <div className={styles.inputWrapper}>
+              <TextInput
+                name={field.name}
+                label={field.label}
+                placeholder={field.placeholder}
+                onChange={handleInputChange}
+                formData={formData}
+                className={
+                  formData[field.name].length
+                    ? isInvalid
+                      ? styles.invalidInput
+                      : styles.validInput
+                    : ''
+                }
+                type={field.type}
+              />
+              {isInvalid && (
+                <span className={styles.errMsg}>{validation.msg}</span>
+              )}
+            </div>
+          );
+        })}
         <button type="submit">Register</button>
       </form>
     </div>
