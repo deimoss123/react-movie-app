@@ -33,6 +33,7 @@ export default function YourMoviesPage() {
 
   const changeRentTime = (index: number, hours: number) => {
     if (hours < 0 && yourMovies[index].hoursRented <= 12) return;
+    if (hours > 0 && yourMovies[index].hoursRented >= 168) return;
     const newMovies = [...yourMovies];
     newMovies[index].hoursRented += hours;
     setYourMovies(newMovies);
