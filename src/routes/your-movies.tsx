@@ -9,10 +9,9 @@ export interface YourMovie {
 }
 
 export default function YourMoviesPage() {
+  const local = localStorage.getItem('yourMovies');
   const [yourMovies, setYourMovies] = useState<YourMovie[]>(
-    localStorage.getItem('yourMovies')
-      ? (JSON.parse(localStorage.getItem('yourMovies')!) as YourMovie[])
-      : []
+    local ? (JSON.parse(local) as YourMovie[]) : []
   );
 
   const onRemoveClick = (movieName: string, index: number) => {
@@ -22,10 +21,9 @@ export default function YourMoviesPage() {
     localStorage.setItem('yourMovies', JSON.stringify(newMovies));
 
     // set available movies
-    const availableMovies = localStorage.getItem('availableMovies')
-      ? (JSON.parse(
-          localStorage.getItem('availableMovies')!
-        ) as AvailableMovie[])
+    const local = localStorage.getItem('availableMovies');
+    const availableMovies = local
+      ? (JSON.parse(local) as AvailableMovie[])
       : defaultMovieList;
     const movie = availableMovies.find(m => m.name === movieName);
     if (!movie) return;
@@ -34,7 +32,7 @@ export default function YourMoviesPage() {
   };
 
   return (
-    <div>
+    <>
       <Header />
       <div className={styles.yourMovies}>
         <table>
@@ -69,6 +67,6 @@ export default function YourMoviesPage() {
           </tbody>
         </table>
       </div>
-    </div>
+    </>
   );
 }

@@ -1,0 +1,23 @@
+.profile {
+  width: 80%;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: salmon;
+  h3 {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  .buttonRow {
+    margin-top: 1rem;
+    display: flex;
+    gap: 1rem;
+    button {
+      padding: 0.5rem;
+    }
+  }
+}
+
+.bold {
+  font-weight: bold;
+}

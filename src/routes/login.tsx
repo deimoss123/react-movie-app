@@ -29,7 +29,7 @@ const TextInput = ({
   </>
 );
 
-interface User {
+export interface User {
   name: string;
   surname: string;
   email: string;
@@ -50,14 +50,10 @@ export default function LoginPage() {
     password: '',
     passwordAgain: '',
   });
-  const { login, authed } = useAuth();
+  const { login } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    console.log(e.target.name);
-
     const { name, value } = e.target;
-
     setFormData(data => ({ ...data, [name]: value }));
   };
 
