@@ -8,6 +8,7 @@ import YourMoviesPage from './routes/your-movies';
 import ProfilePage from './routes/profile';
 import ErrorPage from './routes/error';
 import HomePage from './routes/home';
+import { AuthProvider, RequireAuth } from './auth';
 
 const router = createBrowserRouter([
   {
@@ -16,20 +17,32 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/home',
-        element: <HomePage />,
-      },
-      {
         path: '/login',
         element: <LoginPage />,
       },
       {
+        path: '/home',
+        element: (
+          <RequireAuth>
+            <HomePage />
+          </RequireAuth>
+        ),
+      },
+      {
         path: '/your-movies',
-        element: <YourMoviesPage />,
+        element: (
+          <RequireAuth>
+            <YourMoviesPage />
+          </RequireAuth>
+        ),
       },
       {
         path: '/profile',
-        element: <ProfilePage />,
+        element: (
+          <RequireAuth>
+            <ProfilePage />
+          </RequireAuth>
+        ),
       },
     ],
   },
@@ -37,6 +50,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );

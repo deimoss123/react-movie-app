@@ -2,6 +2,7 @@ import styles from '../styles/loginPage.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { YourMovie } from './your-movies';
+import useAuth from '../auth';
 
 const TextInput = ({
   name,
@@ -49,6 +50,7 @@ export default function LoginPage() {
     password: '',
     passwordAgain: '',
   });
+  const { login, authed } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e.target.value);
@@ -64,7 +66,9 @@ export default function LoginPage() {
 
     // TODO: form validation
     console.log('Login');
-    // navigate('/home');
+    login().then(() => {
+      navigate('/home');
+    });
   };
 
   const onSubmitRegister = (e: React.FormEvent) => {
@@ -83,8 +87,11 @@ export default function LoginPage() {
     const registeredUsers = local ? (JSON.parse(local) as User[]) : [];
     registeredUsers.push(newUser);
     localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+    localStorage.setItem('currentUser', JSON.stringify(newUser));
 
-    navigate('/home');
+    login().then(() => {
+      navigate('/home');
+    });
   };
 
   return (
