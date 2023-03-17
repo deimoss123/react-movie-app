@@ -44,8 +44,8 @@ export default function YourMoviesPage() {
     <>
       <Header />
       <div className={styles.yourMovies}>
+        <h2>Your movies</h2>
         <table>
-          <caption>Your movies</caption>
           <thead>
             <tr>
               <th>Name</th>
@@ -65,14 +65,28 @@ export default function YourMoviesPage() {
                   <td>{data?.genre}</td>
                   <td className={styles.timeCol}>
                     <button onClick={() => changeRentTime(index, -12)}>
-                      {'<'}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z"></path>
+                      </svg>
                     </button>
                     {movie.hoursRented}h
                     <button onClick={() => changeRentTime(index, 12)}>
-                      {'>'}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M10.061 19.061 17.121 12l-7.06-7.061-2.122 2.122L12.879 12l-4.94 4.939z"></path>
+                      </svg>
                     </button>
                   </td>
-                  <td>${price.toFixed(2)}</td>
+                  <td className={styles.priceCol}>${price.toFixed(2)}</td>
                   <td>
                     <button
                       className={styles.removeBtn}
