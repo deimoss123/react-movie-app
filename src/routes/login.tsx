@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { YourMovie } from './your-movies';
 import useAuth from '../auth';
 import getRegisteredUsers from '../util/getRegisteredUsers';
+import Button from '../components/Button';
 
 function TextInput({
   name,
@@ -52,29 +53,6 @@ export interface InputFieldOptions {
 }
 
 const inputFields: InputFieldOptions[] = [
-  // {
-  //   name: 'loginEmail',
-  //   label: 'Email',
-  //   placeholder: 'email',
-  //   validateFunc: inputValue => {
-  //     if (!emailRegex.test(inputValue)) {
-  //       return { valid: false, msg: 'Invalid email' };
-  //     }
-  //     return { valid: true };
-  //   },
-  // },
-  // {
-  //   name: 'loginPassword',
-  //   label: 'Password',
-  //   placeholder: 'password',
-  //   type: 'password',
-  //   validateFunc: inputValue => {
-  //     if (inputValue.length < 2) {
-  //       return { valid: false, msg: 'Must be 8 or more symbols long' };
-  //     }
-  //     return { valid: true };
-  //   },
-  // },
   {
     name: 'name',
     label: 'Name',
@@ -166,6 +144,7 @@ export default function LoginPage() {
     password: '',
     passwordAgain: '',
   });
+  const [isRegisterOpen, setRegisterOpen] = useState(false);
   const { login, authed } = useAuth();
 
   useEffect(() => {
@@ -185,15 +164,16 @@ export default function LoginPage() {
     const foundUser = registeredUsers.find(
       user => user.email === formData.loginEmail
     );
+
     if (!foundUser) {
       // TODO: show that user is not registered
-      alert('user not registered');
+      alert('User not registered');
       return;
     }
 
     if (foundUser.password !== formData.loginPassword) {
       // TODO: incorrect password
-      alert('incorrect password');
+      alert('Incorrect password');
       return;
     }
 
@@ -207,7 +187,22 @@ export default function LoginPage() {
   const onSubmitRegister = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // TODO: form validation
+    if (!isRegisterOpen) {
+      setRegisterOpen(true);
+      return;
+    }
+
+    let isValid = true;
+    for (const field of inputFields) {
+      const validateRes = field.validateFunc(formData[field.name], formData);
+      if (!validateRes.valid) {
+        isValid = false;
+        break;
+      }
+    }
+
+    if (!isValid) return;
+
     const newUser: User = {
       name: formData.name,
       surname: formData.surname,
@@ -226,57 +221,75 @@ export default function LoginPage() {
     });
   };
 
+  const openRegister = () => {
+    setRegisterOpen(true);
+  };
+
   return (
     <div className={styles.loginPage}>
       <form onSubmit={onSubmitLogin}>
-        <TextInput
-          name="loginEmail"
-          label="Email"
-          placeholder="email"
-          onChange={handleInputChange}
-          formData={formData}
-        />
-        <TextInput
-          name="loginPassword"
-          label="Password"
-          placeholder="password"
-          onChange={handleInputChange}
-          formData={formData}
-          type="password"
-        />
+        <div className={styles.inputWrapper}>
+          <TextInput
+            name="loginEmail"
+            label="Email"
+            placeholder="email"
+            onChange={handleInputChange}
+            formData={formData}
+          />
+        </div>
+        <div className={styles.inputWrapper}>
+          <TextInput
+            name="loginPassword"
+            label="Password"
+            placeholder="password"
+            onChange={handleInputChange}
+            formData={formData}
+            type="password"
+          />
+        </div>
 
-        <button type="submit">Log in</button>
+        <Button text="Log in" type="submit" />
       </form>
-      <form onSubmit={onSubmitRegister}>
-        {inputFields.map(field => {
-          const validation = field.validateFunc(formData[field.name], formData);
-          const isInvalid = !!formData[field.name].length && !validation.valid;
+      {!isRegisterOpen ? (
+        <div className={styles.registerOpenWrapper}>
+          <Button text="Register" onClick={openRegister} />
+        </div>
+      ) : (
+        <form onSubmit={onSubmitRegister}>
+          {inputFields.map(field => {
+            const validation = field.validateFunc(
+              formData[field.name],
+              formData
+            );
+            const isInvalid =
+              !!formData[field.name].length && !validation.valid;
 
-          return (
-            <div className={styles.inputWrapper}>
-              <TextInput
-                name={field.name}
-                label={field.label}
-                placeholder={field.placeholder}
-                onChange={handleInputChange}
-                formData={formData}
-                className={
-                  formData[field.name].length
-                    ? isInvalid
-                      ? styles.invalidInput
-                      : styles.validInput
-                    : ''
-                }
-                type={field.type}
-              />
-              {isInvalid && (
-                <span className={styles.errMsg}>{validation.msg}</span>
-              )}
-            </div>
-          );
-        })}
-        <button type="submit">Register</button>
-      </form>
+            return (
+              <div className={styles.inputWrapper}>
+                <TextInput
+                  name={field.name}
+                  label={field.label}
+                  placeholder={field.placeholder}
+                  onChange={handleInputChange}
+                  formData={formData}
+                  className={
+                    formData[field.name].length
+                      ? isInvalid
+                        ? styles.invalidInput
+                        : styles.validInput
+                      : ''
+                  }
+                  type={field.type}
+                />
+                {isInvalid && (
+                  <span className={styles.errMsg}>{validation.msg}</span>
+                )}
+              </div>
+            );
+          })}
+          <Button text="Register" type="submit" />
+        </form>
+      )}
     </div>
   );
 }
