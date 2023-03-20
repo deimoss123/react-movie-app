@@ -50,56 +50,61 @@ export default function YourMoviesPage() {
       <Header />
       <div className={styles.yourMovies}>
         <h2>Your movies</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Genre</th>
-              <th>Time</th>
-              <th>Price</th>
-            </tr>
-          </thead>
-          <tbody>
-            {yourMovies.map((movie, index) => {
-              const data = defaultMovieList.find(m => m.name === movie.name);
-              const price = (movie.hoursRented / 12) * (data?.rentalPrice || 0);
+        {!yourMovies.length ? (
+          <p className={styles.noMoviesText}>You don't have any movies</p>
+        ) : (
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Genre</th>
+                <th>Time</th>
+                <th>Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {yourMovies.map((movie, index) => {
+                const data = defaultMovieList.find(m => m.name === movie.name);
+                const price =
+                  (movie.hoursRented / 12) * (data?.rentalPrice || 0);
 
-              return (
-                <tr key={index}>
-                  <td>{movie.name}</td>
-                  <td>{data?.genre}</td>
-                  <td className={styles.timeCol}>
-                    <button
-                      className={
-                        movie.hoursRented <= 12 ? styles.disabledChevron : ''
-                      }
-                      onClick={() => changeRentTime(index, -12)}
-                    >
-                      <LeftChevron />
-                    </button>
-                    {movie.hoursRented}h
-                    <button
-                      className={
-                        movie.hoursRented >= 168 ? styles.disabledChevron : ''
-                      }
-                      onClick={() => changeRentTime(index, 12)}
-                    >
-                      <RightChevron />
-                    </button>
-                  </td>
-                  <td className={styles.priceCol}>${price.toFixed(2)}</td>
-                  <td>
-                    <Button
-                      text="Remove"
-                      className={styles.removeBtn}
-                      onClick={() => onRemoveClick(index, movie.name)}
-                    />
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                return (
+                  <tr key={index}>
+                    <td>{movie.name}</td>
+                    <td>{data?.genre}</td>
+                    <td className={styles.timeCol}>
+                      <button
+                        className={
+                          movie.hoursRented <= 12 ? styles.disabledChevron : ''
+                        }
+                        onClick={() => changeRentTime(index, -12)}
+                      >
+                        <LeftChevron />
+                      </button>
+                      {movie.hoursRented}h
+                      <button
+                        className={
+                          movie.hoursRented >= 168 ? styles.disabledChevron : ''
+                        }
+                        onClick={() => changeRentTime(index, 12)}
+                      >
+                        <RightChevron />
+                      </button>
+                    </td>
+                    <td className={styles.priceCol}>${price.toFixed(2)}</td>
+                    <td>
+                      <Button
+                        text="Remove"
+                        className={styles.removeBtn}
+                        onClick={() => onRemoveClick(index, movie.name)}
+                      />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   );
