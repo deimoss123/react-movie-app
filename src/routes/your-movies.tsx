@@ -1,9 +1,14 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useState } from 'react';
 import Header from '../components/Header';
 import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/yourMoviesPage.module.scss';
 import getCurrentUser from '../util/getCurrentUser';
 import updateUser from '../util/updateUser';
+import { ReactComponent as LeftChevron } from '../assets/chevron-left.svg';
+import { ReactComponent as RightChevron } from '../assets/chevron-right.svg';
+import Button from '../components/Button';
 
 export interface YourMovie {
   name: string;
@@ -64,36 +69,31 @@ export default function YourMoviesPage() {
                   <td>{movie.name}</td>
                   <td>{data?.genre}</td>
                   <td className={styles.timeCol}>
-                    <button onClick={() => changeRentTime(index, -12)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M13.939 4.939 6.879 12l7.06 7.061 2.122-2.122L11.121 12l4.94-4.939z"></path>
-                      </svg>
+                    <button
+                      className={
+                        movie.hoursRented <= 12 ? styles.disabledChevron : ''
+                      }
+                      onClick={() => changeRentTime(index, -12)}
+                    >
+                      <LeftChevron />
                     </button>
                     {movie.hoursRented}h
-                    <button onClick={() => changeRentTime(index, 12)}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M10.061 19.061 17.121 12l-7.06-7.061-2.122 2.122L12.879 12l-4.94 4.939z"></path>
-                      </svg>
+                    <button
+                      className={
+                        movie.hoursRented >= 168 ? styles.disabledChevron : ''
+                      }
+                      onClick={() => changeRentTime(index, 12)}
+                    >
+                      <RightChevron />
                     </button>
                   </td>
                   <td className={styles.priceCol}>${price.toFixed(2)}</td>
                   <td>
-                    <button
+                    <Button
+                      text="Remove"
                       className={styles.removeBtn}
                       onClick={() => onRemoveClick(index, movie.name)}
-                    >
-                      Remove
-                    </button>
+                    />
                   </td>
                 </tr>
               );
