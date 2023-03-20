@@ -1,0 +1,14 @@
+@use '../styles/globals.scss' as g;
+
+.button {
+  background-color: g.$secondary;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  max-width: fit-content;
+  transition: 300ms background-color;
+  font-weight: 600;
+
+  &:hover {
+    background-color: lighten($color: g.$secondary, $amount: 10);
+  }
+}
