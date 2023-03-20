@@ -14,11 +14,9 @@
 }
 
 .disabled {
-  $gray: #aaa;
-
-  background-color: $gray;
+  background-color: g.$gray-disabled;
   cursor: default;
   &:hover {
-    background-color: $gray;
+    background-color: g.$gray-disabled;
   }
 }
