@@ -4,14 +4,25 @@ interface Props {
   text: string;
   className?: string;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
+  disabled?: boolean;
   onClick?: (e: React.SyntheticEvent) => void;
 }
 
-export default function Button({ text, className, type, onClick }: Props) {
+export default function Button({
+  text,
+  className,
+  type,
+  disabled,
+  onClick,
+}: Props) {
   return (
     <button
       onClick={onClick}
-      className={styles.button + (className ? ` ${className}` : '')}
+      className={
+        styles.button +
+        (disabled ? ` ${styles.disabled}` : '') +
+        (className ? ` ${className}` : '')
+      }
       type={type || 'button'}
     >
       {text}
