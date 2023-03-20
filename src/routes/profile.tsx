@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../components/Button';
 import Header from '../components/Header';
 import styles from '../styles/profilePage.module.scss';
 import getCurrentUser from '../util/getCurrentUser';
@@ -23,7 +24,7 @@ export default function ProfilePage() {
     <>
       <Header />
       <div className={styles.profile}>
-        <h3>Profile</h3>
+        <h2>Profile</h2>
         <p>
           <span className={styles.bold}>Name: </span>
           {user.name}
@@ -37,8 +38,8 @@ export default function ProfilePage() {
           {email}
         </p>
         <div className={styles.buttonRow}>
-          <button onClick={resetPassword}>Reset password</button>
-          <button onClick={resetEmail}>Reset email</button>
+          <Button text="Reset password" onClick={resetPassword} />
+          <Button text="Reset email" onClick={resetEmail} />
         </div>
       </div>
     </>
