@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../components/Button';
 import Header from '../components/Header';
 import defaultMovieList, { AvailableMovie } from '../movieList';
 import styles from '../styles/homePage.module.scss';
@@ -38,8 +39,8 @@ export default function HomePage() {
       <Header />
       <div className={styles.homePage}>
         <div className={styles.movieList}>
+          <h2>Available Movies</h2>
           <table>
-            <caption>Available Movies</caption>
             <thead>
               <tr>
                 <th>Name</th>
@@ -54,11 +55,14 @@ export default function HomePage() {
                   <td>{movie.name}</td>
                   <td>{movie.genre}</td>
                   <td>${movie.rentalPrice}</td>
-                  <td>{movie.stock > 0 ? 'yes' : 'no'}</td>
+                  <td>{movie.stock > 0 ? `yes (${movie.stock})` : 'no'}</td>
                   <td>
-                    <button onClick={() => onRentClick(movie.name)}>
-                      Rent ({movie.stock})
-                    </button>
+                    <Button
+                      text={`Rent`}
+                      disabled={movie.stock <= 0}
+                      className={styles.rentBtn}
+                      onClick={() => onRentClick(movie.name)}
+                    />
                   </td>
                 </tr>
               ))}

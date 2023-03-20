@@ -1,19 +1,24 @@
+@use './globals.scss' as g;
+
 .homePage {
   .movieList {
-    width: 80%;
-    margin: 0 auto;
-    background-color: pink;
-    padding: 1rem;
+    max-width: 800px;
+    margin: 0 0.75rem;
+    background-color: g.$primary;
+    color: g.$light;
+    padding: 1rem 0.5rem;
     border-radius: 0.5rem;
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.75rem;
+      font-weight: bold;
+    }
 
     table {
       width: 100%;
       border-spacing: 0;
-
-      caption {
-        font-size: 1.5rem;
-        margin-bottom: 1.5rem;
-      }
 
       th,
       td {
@@ -21,13 +26,16 @@
         padding: 0.25rem;
       }
 
-      tbody tr {
-        background-color: #ddd;
+      .rentBtn {
+        color: g.$dark;
+        padding: 0.5rem 1rem;
       }
-      button {
-        width: 100%;
-        height: 100%;
-      }
+    }
+
+    @media (min-width: g.$breakpoint-1) {
+      width: 90%;
+      margin: 0 auto;
+      padding: 1.5rem;
     }
   }
 }
